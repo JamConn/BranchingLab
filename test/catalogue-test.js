@@ -41,5 +41,31 @@ describe("Catalogue", () => {
       const result = cat.removeProductById("A321");
       expect(result).to.be.undefined;
     });
+    describe("batchAddProducts", () => {
+      beforeEach(function () {
+        batch = {
+           type: 'Batch',
+          products: [
+            new Product("A126", "Product 6", 100, 10, 10.0, 10),
+            new Product("A127", "Product 7", 100, 10, 10.0, 10),
+          ],
+        };
+      });
+      it("should add products for a normal request and return the correct no. added", () => {
+        const result = cat.batchAddProducts(batch);
+        expect(result).to.equal(2);
+        let addedProduct = cat.findProductById("A126");
+        expect(addedProduct).to.not.be.undefined;
+        addedProduct = cat.findProductById("A126");
+        expect(addedProduct).to.not.be.undefined;
+      });
+      it("should only add products with a non-zero quantity in stock", () => {
+        batch.products.push(new Product("A128", "Product 8", 0, 10, 10.0, 10));
+        const result = cat.batchAddProducts(batch);
+        expect(result).to.equal(2);
+        const rejectedProduct = cat.findProductById("A128");
+        expect(rejectedProduct).to.be.undefined;
+      });
+    });
   });
 });
