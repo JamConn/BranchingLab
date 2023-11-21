@@ -51,4 +51,14 @@ export class Catalogue {
       .reduce((acc, p) => acc + 1, 0);
     return noProductsAdded;
   }
+
+  search(criteria) {
+    if (criteria.keyword == undefined && criteria.price == undefined) {
+      throw new Error("Bad search");
+    }
+    const nameSearch = (product) => product.name.search(criteria.keyword) >= 0;
+    const priceSearch = (product) => product.price <= criteria.price;
+    const searchFunction = criteria.keyword ? nameSearch : priceSearch;
+    return this.products.filter(searchFunction);
+  }
 }
