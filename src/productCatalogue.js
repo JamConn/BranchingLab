@@ -28,6 +28,12 @@ export class Catalogue {
   }
 
   batchAddProducts(batch) {
+    const productIDClash = batch.products.some(
+      (product) => this.findProductById(product.id) !== undefined
+    );
+    if (productIDClash) {
+      throw new Error("Bad Batch");
+    }
     const noProductsAdded = batch.products
       .filter((product) => product.quantityInStock > 0 )
       .filter((p) => {
